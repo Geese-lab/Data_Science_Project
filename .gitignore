@@ -1,0 +1,5 @@
+yellow_tripdata_2019/*.csv
+
+!yellow_tripdata_2019/yellow_tripdata_2019-01.csv
+
+*.pkl
