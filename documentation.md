@@ -15,7 +15,6 @@
    * [Clustering](#clustering)
 7. [Evaluation & Validation](#evaluation--validation)
 8. [Deployment](#deployment)
-9. [Monitoring & Maintenance](#monitoring--maintenance)
 10. [Contributing Guidelines](#contributing-guidelines)
 11. [References](#references)
 
@@ -42,23 +41,15 @@ Workflow follows a six-phase data science lifecycle:
 ## 2. Repository Structure
 
 ```bash
-├── data/                  # Raw and processed data files
-│   ├── raw/               # Original dataset CSVs
-│   └── processed/         # Cleaned and feature-engineered data
-├── notebooks/             # Jupyter notebooks for EDA and prototyping
-├── src/                   # Source code modules
-│   ├── preprocessing/     # Data cleaning and preprocessing scripts
-│   ├── features/          # Feature engineering functions
-│   ├── models/            # Model training and evaluation scripts
-│   ├── deployment/        # FastAPI endpoints and Dockerfiles
-│   └── utils/             # Utility functions
-├── tests/                 # Unit and integration tests
-├── docs/                  # Additional documentation (this file)
+├── Output files/                  
+├── Project codess/             # Jupyter notebooks, python files, R codes
+├── Project Reports/                   
+│   ├── Final Report/     
+│   ├── Mid-Journey Report/
+├── yellow_tripdata_2019-01/                  
 ├── requirements.txt       # Python dependencies
-├── Dockerfile             # Container specification
-├── docker-compose.yml     # Local environment orchestration
-├── README.md              # Project summary and quick start
-└── LICENSE                # Project license
+├── documentation.md              
+├── Executive Summary/
 ```
 
 ---
@@ -67,9 +58,8 @@ Workflow follows a six-phase data science lifecycle:
 
 ### Prerequisites
 
-* Python 3.8+
-* Docker & Docker Compose
-* AWS CLI (for cloud deployment)
+* Python 3.10.11+
+Not higher, because Tensorflow doesn't function in the higher versions of Python
 
 ### Local Environment
 
@@ -115,8 +105,8 @@ Workflow follows a six-phase data science lifecycle:
 **Usage**:
 
 ```python
-from src.preprocessing.clean import clean_data
-train_df = clean_data("data/raw/train.csv")
+data_loader = DataLoader("yellow_tripdata_2019-01\yellow_tripdata_2019-01.csv")
+data_preprocessing = DataPreprocessing(data_loader, 2)
 ```
 
 ---
@@ -136,41 +126,6 @@ Key engineered features:
 * Tip flag
 * Airport trip indicator
 
-**Usage**:
-
-```python
-from src.features.build_features import add_features
-df = add_features(train_df)
-```
-
----
-
-## 6. Modeling
-
-### Supervised Models (`src/models/supervised.py`)
-
-* **Regression**: Linear, Ridge, Lasso, Random Forest, Gradient Boosting
-* **Classification**: Random Forest, Gradient Boosting
-
-Models are configurable via YAML or CLI arguments, with built-in cross-validation.
-
-### Ensemble Methods (`src/models/ensemble.py`)
-
-* **Bagging**: `VotingRegressor` / `VotingClassifier`
-* **Boosting**: XGBoost / LightGBM wrappers
-
-### Deep Learning (`src/models/deep_learning.py`)
-
-* **Architecture**: Fully connected MLP for both regression and classification
-* **Training**: 50 epochs with early stopping
-* **Imbalance Handling**: Class weighting in loss function
-
-### Clustering (`src/models/clustering.py`)
-
-* **K-Means**: Silhouette analysis over multiple K values
-* **DBSCAN**: Grid search over `eps` and `min_samples`
-
----
 
 ## 7. Evaluation & Validation
 
