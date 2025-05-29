@@ -681,8 +681,8 @@ class EDA:
         plt.show()
 
 
-# eda = EDA(data_loader)
-# eda.perform_eda()
+eda = EDA(data_loader)
+eda.perform_eda()
 
 
 
@@ -839,8 +839,8 @@ class HypothesisTesting:
             for feature in numeric_features:
                 p_value, significant = self._perform_correlation(feature)
                 print(f"Feature: {feature}, Correlation p-value: {p_value}, Significant: {significant}")
-# ht = HypothesisTesting(data_loader)
-# ht.run_tests()
+ht = HypothesisTesting(data_loader)
+ht.run_tests()
 
 
 
@@ -1153,53 +1153,53 @@ class KNNClassifier:
             
         return {'accuracy': accuracy}
 
-# print("\n=== Regression Task ===")
-# loader_reg = DataLoader("yellow_tripdata_2019-01\yellow_tripdata_2019-01.csv", task='regression', test_size=0.1)
+print("\n=== Regression Task ===")
+loader_reg = DataLoader("yellow_tripdata_2019-01\yellow_tripdata_2019-01.csv", task='regression', test_size=0.1)
 
-# # Train and predict
-# knn_reg = KNNRegressor(k=3)
-# knn_reg.fit(loader_reg.data_train, loader_reg.labels_train)
-# pred_reg = knn_reg.predict(loader_reg.data_test.iloc[:50])  # Predict on first 50 test samples
+# Train and predict
+knn_reg = KNNRegressor(k=3)
+knn_reg.fit(loader_reg.data_train, loader_reg.labels_train)
+pred_reg = knn_reg.predict(loader_reg.data_test.iloc[:50])  # Predict on first 50 test samples
 
-# reg_results = knn_reg.evaluate(loader_reg.data_test.iloc[:50], loader_reg.labels_test[:50])
+reg_results = knn_reg.evaluate(loader_reg.data_test.iloc[:50], loader_reg.labels_test[:50])
 
-# # Print predictions vs actual values
-# print("\nSample Predictions (Regression):")
-# for i in range(5):  # Show first 5 predictions
-#     print(f"Predicted: ${pred_reg[i]:.2f} | Actual: ${loader_reg.labels_test[i]:.2f}")
+# Print predictions vs actual values
+print("\nSample Predictions (Regression):")
+for i in range(5):  # Show first 5 predictions
+    print(f"Predicted: ${pred_reg[i]:.2f} | Actual: ${loader_reg.labels_test[i]:.2f}")
 
-# # Calculate Mean Absolute Error (MAE)
-# mae = np.mean(np.abs(pred_reg - loader_reg.labels_test[:50]))
-# print(f"\nMean Absolute Error (MAE): ${mae:.2f}")
+# Calculate Mean Absolute Error (MAE)
+mae = np.mean(np.abs(pred_reg - loader_reg.labels_test[:50]))
+print(f"\nMean Absolute Error (MAE): ${mae:.2f}")
 
-# # --------------------------------------------------
-# # Classification Task
-# # --------------------------------------------------
-# print("\n=== Classification Task ===")
-# loader_clf = DataLoader("yellow_tripdata_2019-01\yellow_tripdata_2019-01.csv", task='classification', test_size=0.1)
+# --------------------------------------------------
+# Classification Task
+# --------------------------------------------------
+print("\n=== Classification Task ===")
+loader_clf = DataLoader("yellow_tripdata_2019-01\yellow_tripdata_2019-01.csv", task='classification', test_size=0.1)
 
-# # Train and predict
-# knn_clf = KNNClassifier(k=3)
-# knn_clf.fit(loader_clf.data_train, loader_clf.labels_train)
-# pred_clf = knn_clf.predict(loader_clf.data_test.iloc[:50])  # Predict on first 50 test samples
+# Train and predict
+knn_clf = KNNClassifier(k=3)
+knn_clf.fit(loader_clf.data_train, loader_clf.labels_train)
+pred_clf = knn_clf.predict(loader_clf.data_test.iloc[:50])  # Predict on first 50 test samples
 
-# # Print predictions vs actual classes
-# print("\nSample Predictions (Classification):")
-# class_names = {
-#     1: "Short trip (<$10)",
-#     2: "Medium trip ($10-$30)",
-#     3: "Long trip ($30-$60)",
-#     4: "Premium fare (>$60)"
-# }
-# for i in range(5):  # Show first 5 predictions
-#     print(f"Predicted: {class_names[pred_clf[i]]} | Actual: {class_names[loader_clf.labels_test[i]]}")
+# Print predictions vs actual classes
+print("\nSample Predictions (Classification):")
+class_names = {
+    1: "Short trip (<$10)",
+    2: "Medium trip ($10-$30)",
+    3: "Long trip ($30-$60)",
+    4: "Premium fare (>$60)"
+}
+for i in range(5):  # Show first 5 predictions
+    print(f"Predicted: {class_names[pred_clf[i]]} | Actual: {class_names[loader_clf.labels_test[i]]}")
 
-# clf_results = knn_clf.evaluate(loader_clf.data_test.iloc[:50], loader_clf.labels_test[:50])
+clf_results = knn_clf.evaluate(loader_clf.data_test.iloc[:50], loader_clf.labels_test[:50])
 
 
-# # Calculate Accuracy
-# accuracy = np.mean(pred_clf == loader_clf.labels_test[:50])
-# print(f"\nAccuracy: {accuracy*100:.1f}%")
+# Calculate Accuracy
+accuracy = np.mean(pred_clf == loader_clf.labels_test[:50])
+print(f"\nAccuracy: {accuracy*100:.1f}%")
 
 
 
@@ -1411,20 +1411,20 @@ class Supervised_Learning():
                 'F1-Score': f1_score(y_true, preds, average='weighted')
             }
 
-# supervised_learning = Supervised_Learning(data_loader)
-# results = supervised_learning.train_models()
+supervised_learning = Supervised_Learning(data_loader)
+results = supervised_learning.train_models()
 
-# print("Regression Results:")
-# print(pd.DataFrame(results['regression']).T.sort_values("mean_score"))
+print("Regression Results:")
+print(pd.DataFrame(results['regression']).T.sort_values("mean_score"))
 
-# print("\nClassification Results:")
-# print(pd.DataFrame(results['classification']).T.sort_values("mean_score"))
+print("\nClassification Results:")
+print(pd.DataFrame(results['classification']).T.sort_values("mean_score"))
 
-# print("\nFinal Regression Evaluation:")
-# print(supervised_learning.final_evaluation('regression',  sample_size=500))
+print("\nFinal Regression Evaluation:")
+print(supervised_learning.final_evaluation('regression',  sample_size=500))
 
-# print("\nFinal Classification Evaluation:")
-# print(supervised_learning.final_evaluation('classification',  sample_size=200))
+print("\nFinal Classification Evaluation:")
+print(supervised_learning.final_evaluation('classification',  sample_size=200))
 
 
 
@@ -1869,19 +1869,19 @@ class TaxiFarePredictor:
         
         return reg_rmse, cls_acc
 
-# # Create and train the predictor
-# predictor = TaxiFarePredictor(data_loader)
+# Create and train the predictor
+predictor = TaxiFarePredictor(data_loader)
 
-# reg_history, cls_history = predictor.train_models()
+reg_history, cls_history = predictor.train_models()
 
-# # Get the preprocessed test data
-# (_, X_test, _, y_reg_test, _, y_cls_test) = predictor.preprocess_data()
+# Get the preprocessed test data
+(_, X_test, _, y_reg_test, _, y_cls_test) = predictor.preprocess_data()
 
-# # Evaluate the models
-# predictor.evaluate_models(X_test, y_reg_test, y_cls_test)
+# Evaluate the models
+predictor.evaluate_models(X_test, y_reg_test, y_cls_test)
 
-# predictor.regression_model.save("taxi_fare_regression_model.h5")
-# predictor.classification_model.save("taxi_fare_classifier.h5")
+predictor.regression_model.save("taxi_fare_regression_model.h5")
+predictor.classification_model.save("taxi_fare_classifier.h5")
 
 
 
