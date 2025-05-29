@@ -1898,175 +1898,175 @@ predictor.classification_model.save("taxi_fare_classifier.h5")
 
 
 
-# class Clusterer:
-#     def __init__(self, data_loader, sample_size=50000, random_state=42):
-#         self.data_loader = data_loader
-#         self.sample_size = sample_size
-#         self.random_state = random_state
-#         self.scaler = StandardScaler()
-#         self.df = None
-#         self.features = None
-#         self.scaled_features = None
+class Clusterer:
+    def __init__(self, data_loader, sample_size=50000, random_state=42):
+        self.data_loader = data_loader
+        self.sample_size = sample_size
+        self.random_state = random_state
+        self.scaler = StandardScaler()
+        self.df = None
+        self.features = None
+        self.scaled_features = None
 
-#     def preprocess_data(self):
-#         """Prepare data for clustering"""
-#         df = self.data_loader.get_full_data().copy()
+    def preprocess_data(self):
+        """Prepare data for clustering"""
+        df = self.data_loader.get_full_data().copy()
         
-#         # Feature engineering
-#         df['trip_duration'] = (pd.to_datetime(df['tpep_dropoff_datetime']) - 
-#                               pd.to_datetime(df['tpep_pickup_datetime'])).dt.total_seconds() / 60
-#         df['hour_of_day'] = pd.to_datetime(df['tpep_pickup_datetime']).dt.hour
-#         df['is_weekend'] = pd.to_datetime(df['tpep_pickup_datetime']).dt.weekday >= 5
+        # Feature engineering
+        df['trip_duration'] = (pd.to_datetime(df['tpep_dropoff_datetime']) - 
+                              pd.to_datetime(df['tpep_pickup_datetime'])).dt.total_seconds() / 60
+        df['hour_of_day'] = pd.to_datetime(df['tpep_pickup_datetime']).dt.hour
+        df['is_weekend'] = pd.to_datetime(df['tpep_pickup_datetime']).dt.weekday >= 5
         
-#         # Select relevant features for clustering
-#         features = [
-#             'trip_distance', 
-#             'trip_duration',
-#             'fare_amount',
-#             'passenger_count',
-#             'PULocationID',
-#             'DOLocationID',
-#             'hour_of_day'
-#         ]
+        # Select relevant features for clustering
+        features = [
+            'trip_distance', 
+            'trip_duration',
+            'fare_amount',
+            'passenger_count',
+            'PULocationID',
+            'DOLocationID',
+            'hour_of_day'
+        ]
         
-#         # Sample data
-#         self.df = df.sample(min(self.sample_size, len(df)), random_state=self.random_state)
-#         self.features = self.df[features]
+        # Sample data
+        self.df = df.sample(min(self.sample_size, len(df)), random_state=self.random_state)
+        self.features = self.df[features]
         
-#         # Scale features
-#         self.scaled_features = self.scaler.fit_transform(self.features)
-#         return self.scaled_features
+        # Scale features
+        self.scaled_features = self.scaler.fit_transform(self.features)
+        return self.scaled_features
 
-#     def apply_kmeans(self, n_clusters_range=range(2, 8)):
-#         """Apply K-Means with varying cluster numbers"""
-#         results = {}
-#         silhouette_scores = []
+    def apply_kmeans(self, n_clusters_range=range(2, 8)):
+        """Apply K-Means with varying cluster numbers"""
+        results = {}
+        silhouette_scores = []
         
-#         for n in n_clusters_range:
-#             kmeans = KMeans(n_clusters=n, random_state=self.random_state, n_init=10)
-#             cluster_labels = kmeans.fit_predict(self.scaled_features)
+        for n in n_clusters_range:
+            kmeans = KMeans(n_clusters=n, random_state=self.random_state, n_init=10)
+            cluster_labels = kmeans.fit_predict(self.scaled_features)
             
-#             silhouette = silhouette_score(self.scaled_features, cluster_labels)
-#             silhouette_scores.append(silhouette)
+            silhouette = silhouette_score(self.scaled_features, cluster_labels)
+            silhouette_scores.append(silhouette)
             
-#             results[n] = {
-#                 'model': kmeans,
-#                 'labels': cluster_labels,
-#                 'silhouette': silhouette,
-#                 'inertia': kmeans.inertia_
-#             }
+            results[n] = {
+                'model': kmeans,
+                'labels': cluster_labels,
+                'silhouette': silhouette,
+                'inertia': kmeans.inertia_
+            }
             
-#             print(f"K-Means with {n} clusters - Silhouette: {silhouette:.3f}")
+            print(f"K-Means with {n} clusters - Silhouette: {silhouette:.3f}")
         
-#         # Plot results
-#         self._plot_cluster_metrics(
-#             n_clusters_range, 
-#             [results[n]['silhouette'] for n in n_clusters_range],
-#             'Silhouette Score',
-#             'K-Means Clustering Quality'
-#         )
+        # Plot results
+        self._plot_cluster_metrics(
+            n_clusters_range, 
+            [results[n]['silhouette'] for n in n_clusters_range],
+            'Silhouette Score',
+            'K-Means Clustering Quality'
+        )
         
-#         self._plot_cluster_metrics(
-#             n_clusters_range, 
-#             [results[n]['inertia'] for n in n_clusters_range],
-#             'Inertia',
-#             'K-Means Inertia'
-#         )
+        self._plot_cluster_metrics(
+            n_clusters_range, 
+            [results[n]['inertia'] for n in n_clusters_range],
+            'Inertia',
+            'K-Means Inertia'
+        )
         
-#         return results
+        return results
 
-#     def apply_dbscan(self, eps_range=[0.5, 1.0, 1.5], min_samples_range=[5, 10, 20]):
-#         """Apply DBSCAN with different parameters"""
-#         results = {}
+    def apply_dbscan(self, eps_range=[0.5, 1.0, 1.5], min_samples_range=[5, 10, 20]):
+        """Apply DBSCAN with different parameters"""
+        results = {}
         
-#         for eps in eps_range:
-#             for min_samples in min_samples_range:
-#                 dbscan = DBSCAN(eps=eps, min_samples=min_samples)
-#                 cluster_labels = dbscan.fit_predict(self.scaled_features)
+        for eps in eps_range:
+            for min_samples in min_samples_range:
+                dbscan = DBSCAN(eps=eps, min_samples=min_samples)
+                cluster_labels = dbscan.fit_predict(self.scaled_features)
                 
-#                 n_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
+                n_clusters = len(set(cluster_labels)) - (1 if -1 in cluster_labels else 0)
                 
-#                 if n_clusters > 1:
-#                     silhouette = silhouette_score(self.scaled_features, cluster_labels)
-#                 else:
-#                     silhouette = -1
+                if n_clusters > 1:
+                    silhouette = silhouette_score(self.scaled_features, cluster_labels)
+                else:
+                    silhouette = -1
                 
-#                 results[(eps, min_samples)] = {
-#                     'model': dbscan,
-#                     'labels': cluster_labels,
-#                     'silhouette': silhouette,
-#                     'n_clusters': n_clusters,
-#                     'noise_points': sum(cluster_labels == -1)
-#                 }
+                results[(eps, min_samples)] = {
+                    'model': dbscan,
+                    'labels': cluster_labels,
+                    'silhouette': silhouette,
+                    'n_clusters': n_clusters,
+                    'noise_points': sum(cluster_labels == -1)
+                }
                 
-#                 print(f"DBSCAN (eps={eps}, min_samples={min_samples}) - "
-#                       f"Clusters: {n_clusters}, Silhouette: {silhouette:.3f}, "
-#                       f"Noise: {results[(eps, min_samples)]['noise_points']}")
+                print(f"DBSCAN (eps={eps}, min_samples={min_samples}) - "
+                      f"Clusters: {n_clusters}, Silhouette: {silhouette:.3f}, "
+                      f"Noise: {results[(eps, min_samples)]['noise_points']}")
         
-#         return results
+        return results
 
-#     def _plot_cluster_metrics(self, x_values, y_values, y_label, title):
-#         """Helper function to plot cluster metrics"""
-#         plt.figure(figsize=(10, 6))
-#         plt.plot(x_values, y_values, 'bo-')
-#         plt.xlabel('Number of clusters')
-#         plt.ylabel(y_label)
-#         plt.title(title)
-#         plt.grid(True)
-#         plt.show()
+    def _plot_cluster_metrics(self, x_values, y_values, y_label, title):
+        """Helper function to plot cluster metrics"""
+        plt.figure(figsize=(10, 6))
+        plt.plot(x_values, y_values, 'bo-')
+        plt.xlabel('Number of clusters')
+        plt.ylabel(y_label)
+        plt.title(title)
+        plt.grid(True)
+        plt.show()
 
-#     def visualize_clusters(self, cluster_labels, algorithm_name):
-#         """Visualize clusters using PCA"""
-#         pca = PCA(n_components=2)
-#         reduced_data = pca.fit_transform(self.scaled_features)
+    def visualize_clusters(self, cluster_labels, algorithm_name):
+        """Visualize clusters using PCA"""
+        pca = PCA(n_components=2)
+        reduced_data = pca.fit_transform(self.scaled_features)
         
-#         plt.figure(figsize=(12, 8))
-#         scatter = plt.scatter(reduced_data[:, 0], reduced_data[:, 1], 
-#                             c=cluster_labels, cmap='viridis', alpha=0.6)
-#         plt.colorbar(scatter)
-#         plt.title(f'{algorithm_name} Clustering (PCA-reduced)')
-#         plt.xlabel('PCA Component 1')
-#         plt.ylabel('PCA Component 2')
-#         plt.show()
+        plt.figure(figsize=(12, 8))
+        scatter = plt.scatter(reduced_data[:, 0], reduced_data[:, 1], 
+                            c=cluster_labels, cmap='viridis', alpha=0.6)
+        plt.colorbar(scatter)
+        plt.title(f'{algorithm_name} Clustering (PCA-reduced)')
+        plt.xlabel('PCA Component 1')
+        plt.ylabel('PCA Component 2')
+        plt.show()
         
-#         return cluster_labels
+        return cluster_labels
 
-#     def analyze_clusters(self, cluster_labels):
-#         """Analyze cluster characteristics"""
-#         temp_df = self.df.copy()
-#         temp_df['cluster'] = cluster_labels
+    def analyze_clusters(self, cluster_labels):
+        """Analyze cluster characteristics"""
+        temp_df = self.df.copy()
+        temp_df['cluster'] = cluster_labels
         
-#         numeric_df = temp_df.select_dtypes(include=[np.number])
-#         cluster_stats = numeric_df.groupby('cluster').mean()
-#         cluster_counts = numeric_df['cluster'].value_counts().rename('count')
+        numeric_df = temp_df.select_dtypes(include=[np.number])
+        cluster_stats = numeric_df.groupby('cluster').mean()
+        cluster_counts = numeric_df['cluster'].value_counts().rename('count')
         
-#         result_df = cluster_stats.join(cluster_counts)
+        result_df = cluster_stats.join(cluster_counts)
         
-#         print("\nCluster Characteristics:")
-#         print(result_df[['trip_distance', 'trip_duration', 'fare_amount', 
-#                        'passenger_count', 'hour_of_day', 'count']])
+        print("\nCluster Characteristics:")
+        print(result_df[['trip_distance', 'trip_duration', 'fare_amount', 
+                       'passenger_count', 'hour_of_day', 'count']])
         
-#         return result_df
+        return result_df
 
-# # Initialize components
-# clusterer = Clusterer(data_loader)
-# clusterer.preprocess_data()
+# Initialize components
+clusterer = Clusterer(data_loader)
+clusterer.preprocess_data()
 
-# # K-Means analysis
-# kmeans_results = clusterer.apply_kmeans(n_clusters_range=range(2, 6))
-# best_k = max(kmeans_results, key=lambda k: kmeans_results[k]['silhouette'])
-# labels = kmeans_results[best_k]['labels']
+# K-Means analysis
+kmeans_results = clusterer.apply_kmeans(n_clusters_range=range(2, 6))
+best_k = max(kmeans_results, key=lambda k: kmeans_results[k]['silhouette'])
+labels = kmeans_results[best_k]['labels']
 
-# # Visualize and analyze
-# clusterer.visualize_clusters(labels, "K-Means")
-# cluster_stats = clusterer.analyze_clusters(labels)
+# Visualize and analyze
+clusterer.visualize_clusters(labels, "K-Means")
+cluster_stats = clusterer.analyze_clusters(labels)
 
-# # DBSCAN analysis (similar pattern)
-# dbscan_results = clusterer.apply_dbscan()
-# best_params = max(dbscan_results, key=lambda k: dbscan_results[k]['silhouette'])
-# labels_dbscan = dbscan_results[best_params]['labels']
+# DBSCAN analysis (similar pattern)
+dbscan_results = clusterer.apply_dbscan()
+best_params = max(dbscan_results, key=lambda k: dbscan_results[k]['silhouette'])
+labels_dbscan = dbscan_results[best_params]['labels']
 
-# clusterer.visualize_clusters(labels_dbscan, "DBSCAN")
-# clusterer.analyze_clusters(labels_dbscan)
+clusterer.visualize_clusters(labels_dbscan, "DBSCAN")
+clusterer.analyze_clusters(labels_dbscan)
 
 # %%
